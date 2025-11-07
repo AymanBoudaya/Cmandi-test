@@ -32,20 +32,14 @@ class DashboardSideMenu extends StatelessWidget {
     final userController = Get.find<UserController>();
 
     return Container(
-      width: 250,
+      width: 280,
       decoration: BoxDecoration(
         color: dark ? AppColors.darkContainer : Colors.white,
-        border: Border(
-          right: BorderSide(
-            color: dark ? Colors.grey.shade800 : Colors.grey.shade300,
-            width: 1,
-          ),
-        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
-            offset: const Offset(0, 0),
+            offset: const Offset(2, 0),
           ),
         ],
       ),
@@ -96,6 +90,7 @@ class DashboardSideMenu extends StatelessWidget {
                   title: isAdmin ? 'Dashboard Admin' : 'Dashboard Gérant',
                   isSelected: currentRoute == 'dashboard',
                   onTap: () {
+                    Navigator.pop(context); // Fermer le drawer
                     if (isAdmin) {
                       Get.offAll(() => AdminDashboardScreen());
                     } else {
@@ -105,25 +100,24 @@ class DashboardSideMenu extends StatelessWidget {
                   dark: dark,
                 ),
 
-                // Gérer commandes
-                if (isAdmin || userController.user.value.role == 'Gérant')
+                // Gérer commandes (Gérant seulement, pas pour Admin)
+                if (!isAdmin && userController.user.value.role == 'Gérant')
                   _buildMenuItem(
                     context: context,
                     icon: Iconsax.shopping_bag,
                     title: 'Gérer commandes',
                     isSelected: currentRoute == 'orders',
                     onTap: () async {
-                      if (!isAdmin) {
-                        final etab = await EtablissementController.instance
-                            .getEtablissementUtilisateurConnecte();
-                        if (etab == null ||
-                            etab.statut != StatutEtablissement.approuve) {
-                          TLoaders.errorSnackBar(
-                            message:
-                                'Accès désactivé tant que votre établissement n\'est pas approuvé.',
-                          );
-                          return;
-                        }
+                      Navigator.pop(context); // Fermer le drawer
+                      final etab = await EtablissementController.instance
+                          .getEtablissementUtilisateurConnecte();
+                      if (etab == null ||
+                          etab.statut != StatutEtablissement.approuve) {
+                        TLoaders.errorSnackBar(
+                          message:
+                              'Accès désactivé tant que votre établissement n\'est pas approuvé.',
+                        );
+                        return;
                       }
                       Get.to(() => GerantOrderManagementScreen());
                     },
@@ -138,6 +132,7 @@ class DashboardSideMenu extends StatelessWidget {
                     title: 'Gérer catégorie',
                     isSelected: currentRoute == 'categories',
                     onTap: () {
+                      Navigator.pop(context); // Fermer le drawer
                       Get.to(() => CategoryManagementPage());
                     },
                     dark: dark,
@@ -151,6 +146,7 @@ class DashboardSideMenu extends StatelessWidget {
                     title: 'Gérer établissement',
                     isSelected: currentRoute == 'establishments',
                     onTap: () {
+                      Navigator.pop(context); // Fermer le drawer
                       Get.to(() => MonEtablissementScreen());
                     },
                     dark: dark,
@@ -164,6 +160,7 @@ class DashboardSideMenu extends StatelessWidget {
                     title: 'Gérer produit',
                     isSelected: currentRoute == 'products',
                     onTap: () async {
+                      Navigator.pop(context); // Fermer le drawer
                       if (!isAdmin) {
                         final etab = await EtablissementController.instance
                             .getEtablissementUtilisateurConnecte();
@@ -190,6 +187,7 @@ class DashboardSideMenu extends StatelessWidget {
                   title: 'Retour au menu',
                   isSelected: false,
                   onTap: () {
+                    Navigator.pop(context); // Fermer le drawer
                     Get.back();
                   },
                   dark: dark,

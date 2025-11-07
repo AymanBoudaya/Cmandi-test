@@ -8,8 +8,15 @@ import '../../../../utils/helpers/helper_functions.dart';
 import '../../../shop/controllers/dashboard_controller.dart';
 import 'dashboard_side_menu.dart';
 
-class AdminDashboardScreen extends StatelessWidget {
+class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
+
+  @override
+  State<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
+}
+
+class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +24,14 @@ class AdminDashboardScreen extends StatelessWidget {
     final dark = THelperFunctions.isDarkMode(context);
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: TAppBar(
         title: const Text('Dashboard Admin'),
+        showBackArrow: false,
+        leadingIcon: Icons.menu,
+        leadingOnPressed: () {
+          _scaffoldKey.currentState?.openDrawer();
+        },
         actions: [
           IconButton(
             icon: const Icon(Iconsax.refresh),
@@ -27,30 +40,11 @@ class AdminDashboardScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          // Sur mobile, masquer le menu latéral
-          if (constraints.maxWidth < 900) {
-            return _buildDashboardContent(controller, dark);
-          }
-
-          // Sur desktop, afficher le menu latéral
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Menu latéral
-              const DashboardSideMenu(
-                currentRoute: 'dashboard',
-                isAdmin: true,
-              ),
-              // Contenu du dashboard
-              Expanded(
-                child: _buildDashboardContent(controller, dark),
-              ),
-            ],
-          );
-        },
+      drawer: const DashboardSideMenu(
+        currentRoute: 'dashboard',
+        isAdmin: true,
       ),
+      body: _buildDashboardContent(controller, dark),
     );
   }
 
