@@ -469,6 +469,10 @@ class _GerantOrderManagementScreenState
               if (order.pickupDay != null && order.pickupTimeRange != null)
                 _buildTimeSlot(order, context),
 
+              // Heure d'arrivée
+              if (order.clientArrivalTime != null && order.clientArrivalTime!.isNotEmpty)
+                _buildArrivalTime(order, context),
+
               // Items Preview
               _buildItemsPreview(order, context),
 
@@ -607,6 +611,63 @@ class _GerantOrderManagementScreenState
                   "${order.pickupDay!} • ${order.pickupTimeRange!}",
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Arrival Time
+  Widget _buildArrivalTime(OrderModel order, BuildContext context) {
+    // Formater l'heure d'arrivée (format HH:mm:ss -> HH:mm)
+    String formattedArrivalTime = order.clientArrivalTime!;
+    try {
+      // Si le format est HH:mm:ss, on prend seulement HH:mm
+      if (formattedArrivalTime.contains(':')) {
+        final parts = formattedArrivalTime.split(':');
+        if (parts.length >= 2) {
+          formattedArrivalTime = '${parts[0]}:${parts[1]}';
+        }
+      }
+    } catch (e) {
+      // En cas d'erreur, utiliser la valeur telle quelle
+      debugPrint('Erreur formatage heure d\'arrivée: $e');
+    }
+
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.green.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(AppSizes.cardRadiusMd),
+        border: Border.all(color: Colors.green.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        children: [
+          Icon(Iconsax.location, color: Colors.green.shade700, size: 18),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Heure d'arrivée estimée",
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Colors.green.shade700,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  formattedArrivalTime,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.green.shade800,
                       ),
                 ),
               ],
