@@ -10,6 +10,7 @@ import '../../../features/authentication/screens/login/login.dart';
 import '../../../features/authentication/screens/onboarding/onboarding.dart';
 import '../../../features/personalization/controllers/user_controller.dart';
 import '../../../features/personalization/models/user_model.dart';
+import '../../../features/personalization/screens/dashboard/admin_dashboard_screen.dart';
 import '../../../navigation_menu.dart';
 import '../../../utils/popups/loaders.dart';
 import '../user/user_repository.dart';
@@ -39,7 +40,9 @@ class AuthenticationRepository extends GetxController {
           // Connexion classique
           await UserRepository.instance.fetchUserDetails();
           await TLocalStorage.init(session.user.id);
-          Get.offAll(() => const NavigationMenu());
+          await UserController.instance.fetchUserRecord();
+          // Rediriger selon le rôle de l'utilisateur
+          _redirectBasedOnRole();
         } else if (event == AuthChangeEvent.signedOut) {
           await deviceStorage.remove('pending_user_data');
           Get.offAll(() => const LoginScreen());
@@ -65,7 +68,10 @@ class AuthenticationRepository extends GetxController {
 
       if (emailVerified) {
         await TLocalStorage.init(user.id);
-        Get.offAll(() => const NavigationMenu());
+        await UserRepository.instance.fetchUserDetails();
+        await UserController.instance.fetchUserRecord();
+        // Rediriger selon le rôle de l'utilisateur
+        _redirectBasedOnRole();
       } else {
         // OTP non vérifié
         final pendingMap = pending as Map<String, dynamic>?;
@@ -182,7 +188,8 @@ class AuthenticationRepository extends GetxController {
         await TLocalStorage.init(supabaseUser.id);
         await UserController.instance.fetchUserRecord();
 
-        Get.offAll(() => const NavigationMenu());
+        // Rediriger selon le rôle de l'utilisateur
+        _redirectBasedOnRole();
       } else {
         // --- CAS CONNEXION
         final existingUser =
@@ -196,7 +203,8 @@ class AuthenticationRepository extends GetxController {
         await TLocalStorage.init(supabaseUser.id);
         await UserController.instance.fetchUserRecord();
 
-        Get.offAll(() => const NavigationMenu());
+        // Rediriger selon le rôle de l'utilisateur
+        _redirectBasedOnRole();
       }
     } catch (e) {
       TLoaders.errorSnackBar(
@@ -229,6 +237,35 @@ class AuthenticationRepository extends GetxController {
       Get.offAll(() => const LoginScreen());
     } catch (e) {
       throw Exception('logout erreur: $e');
+    }
+  }
+
+  /// --- Redirection basée sur le rôle de l'utilisateur
+  void _redirectBasedOnRole() {
+    try {
+      final userController = UserController.instance;
+      final user = userController.user.value;
+      
+      // Vérifier que l'utilisateur est bien chargé
+      if (user.id.isEmpty) {
+        print('Utilisateur non chargé, redirection vers NavigationMenu');
+        Get.offAll(() => const NavigationMenu());
+        return;
+      }
+
+      final userRole = user.role;
+
+      // Si l'utilisateur est admin, rediriger vers le dashboard admin
+      if (userRole == 'Admin') {
+        Get.offAll(() => const AdminDashboardScreen());
+      } else {
+        // Sinon, rediriger vers le menu de navigation normal
+        Get.offAll(() => const NavigationMenu());
+      }
+    } catch (e) {
+      // En cas d'erreur, rediriger vers le menu de navigation par défaut
+      print('Erreur lors de la redirection basée sur le rôle: $e');
+      Get.offAll(() => const NavigationMenu());
     }
   }
 }

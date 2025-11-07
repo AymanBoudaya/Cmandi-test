@@ -38,7 +38,7 @@ class TSortableProducts extends StatelessWidget {
                 .map((option) =>
                     DropdownMenuItem(value: option, child: Text(option)))
                 .toList(),
-            value: controller.selectedSortOption.value,
+            initialValue: controller.selectedSortOption.value,
             onChanged: (value) {
               if (value == null) return;
               if (useBrandContext) {

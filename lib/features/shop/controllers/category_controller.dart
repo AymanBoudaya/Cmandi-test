@@ -42,7 +42,7 @@ class CategoryController extends GetxController
   final UserController userController = Get.find<UserController>();
 
   final isLoading = true.obs;
-  final _categoryRepository = Get.put(CategoryRepository());
+  final _categoryRepository = CategoryRepository.instance;
   RxList<CategoryModel> allCategories = <CategoryModel>[].obs;
   RxList<CategoryModel> featuredCategories = <CategoryModel>[].obs;
   late TabController tabController;
@@ -50,10 +50,15 @@ class CategoryController extends GetxController
   final Rx<CategoryFilter> selectedFilter = CategoryFilter.all.obs;
 
   @override
+  void onInit() {
+    super.onInit();
+    // Initialize tabController in onInit so it's available immediately
+    tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
   void onReady() {
     super.onReady();
-    // Delay tabController creation until after the first frame
-    tabController = TabController(length: 2, vsync: this);
     _initializeData();
   }
 
@@ -71,6 +76,7 @@ class CategoryController extends GetxController
   void onClose() {
     nameController.dispose();
     parentIdController.dispose();
+    tabController.dispose();
     super.onClose();
   }
 

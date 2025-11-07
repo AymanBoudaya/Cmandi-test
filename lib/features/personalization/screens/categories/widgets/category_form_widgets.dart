@@ -179,7 +179,7 @@ class CategoryParentDropdown extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String?>(
-          value: selectedParentId,
+          initialValue: selectedParentId,
           decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

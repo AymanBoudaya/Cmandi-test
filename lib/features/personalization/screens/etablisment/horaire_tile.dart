@@ -198,7 +198,7 @@ class _HoraireTileAmelioreState extends State<HoraireTileAmeliore> {
                 Switch(
                   value: _currentHoraire.estOuvert,
                   onChanged: _toggleOuverture,
-                  activeColor: couleurJour,
+                  activeThumbColor: couleurJour,
                 ),
               ],
             ),
