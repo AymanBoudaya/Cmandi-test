@@ -10,6 +10,7 @@ import '../data/repositories/order/order_repository.dart';
 import '../data/repositories/product/produit_repository.dart';
 import '../data/repositories/user/user_repository.dart';
 import '../features/authentication/controllers/signup/verify_otp_controller.dart';
+import '../features/personalization/controllers/location_controller.dart';
 import '../features/personalization/controllers/user_controller.dart';
 import '../features/shop/controllers/category_controller.dart';
 import '../features/shop/controllers/etablissement_controller.dart';
@@ -43,6 +44,7 @@ class GeneralBinding extends Bindings {
 
     Get.lazyPut<NetworkManager>(() => NetworkManager(), fenix: true);
     Get.lazyPut<UserController>(() => UserController(), fenix: true);
+    Get.lazyPut<LocationController>(() => LocationController(), fenix: true);
     Get.lazyPut<EtablissementController>(
         () => EtablissementController(Get.find<EtablissementRepository>()),
         fenix: true);

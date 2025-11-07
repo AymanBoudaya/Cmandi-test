@@ -10,6 +10,7 @@ import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../../../utils/popups/loaders.dart';
 import '../../../personalization/controllers/user_controller.dart';
+import '../../../personalization/screens/dashboard/dashboard_side_menu.dart';
 import '../../controllers/etablissement_controller.dart';
 import '../../controllers/product/order_controller.dart';
 import '../../models/order_model.dart';
@@ -30,6 +31,7 @@ class _GerantOrderManagementScreenState
   final EtablissementController etablissementController =
       EtablissementController.instance;
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String? _currentEtablissementId;
 
   late TabController _tabController;
@@ -192,11 +194,17 @@ class _GerantOrderManagementScreenState
     }
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: TAppBar(
         title: Text(
           'Gestion des Commandes',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
+        showBackArrow: false,
+        leadingIcon: Icons.menu,
+        leadingOnPressed: () {
+          _scaffoldKey.currentState?.openDrawer();
+        },
         actions: [
           IconButton(
             icon: const Icon(Iconsax.refresh),
@@ -204,6 +212,10 @@ class _GerantOrderManagementScreenState
             tooltip: 'Actualiser',
           ),
         ],
+      ),
+      drawer: const DashboardSideMenu(
+        currentRoute: 'orders',
+        isAdmin: false,
       ),
       body: Column(
         children: [

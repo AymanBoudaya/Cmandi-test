@@ -16,6 +16,7 @@ import '../../../../data/repositories/authentication/authentication_repository.d
 import '../../../../utils/constants/sizes.dart';
 import '../../../notification/screens/notifications_screen.dart';
 import '../../../shop/screens/product_reviews/list_produit_screen.dart';
+import '../../controllers/location_controller.dart';
 import '../../controllers/user_controller.dart';
 import '../address/address.dart';
 import '../brands/mon_etablissement_screen.dart';
@@ -136,12 +137,28 @@ class SettingsScreen extends StatelessWidget {
                   SizedBox(height: AppSizes.spaceBtwSections),
                   TSectionHeading(title: "Paramètres", showActionButton: false),
                   SizedBox(height: AppSizes.spaceBtwItems),
-                  TSettingsMenuTile(
+                  Obx(() {
+                    final locationController = LocationController.instance;
+                    return TSettingsMenuTile(
                       icon: Iconsax.location,
                       title: "Géolocalisation",
-                      subTitle:
-                          "Définir une recommandation à partir de ma position",
-                      trailing: Switch(value: true, onChanged: (value) {})),
+                      subTitle: locationController.isLocationEnabled.value
+                          ? "Active - Recommandations basées sur votre position"
+                          : "Définir une recommandation à partir de ma position",
+                      trailing: locationController.isCheckingPermission.value
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Switch(
+                              value: locationController.isLocationEnabled.value,
+                              onChanged: (value) async {
+                                await locationController.toggleLocation(value);
+                              },
+                            ),
+                    );
+                  }),
 
                   /// Développeur , upload
                   if (isAdminGerant()) ...[
