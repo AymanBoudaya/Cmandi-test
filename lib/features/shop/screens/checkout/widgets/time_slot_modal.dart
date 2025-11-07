@@ -15,16 +15,17 @@ class TimeSlotModal {
       BuildContext context, bool dark, ProduitModel product) async {
     // Use instance getter which handles creation if needed
     final orderController = OrderController.instance;
-    
+
     final cartController = CartController.instance;
-    
+
     // Use Get.put with tag or find if exists to avoid duplicates
     HoraireController horaireController;
     try {
       horaireController = Get.find<HoraireController>();
       // If found but for different etablissement, fetch new ones
     } catch (e) {
-      horaireController = Get.put(HoraireController(HoraireRepository()), tag: null);
+      horaireController =
+          Get.put(HoraireController(HoraireRepository()), tag: null);
     }
 
     // Vérifier que l'ID de l'établissement est valide
@@ -39,7 +40,8 @@ class TimeSlotModal {
     }
 
     // Charger les horaires
-    final horairesResult = await horaireController.fetchHoraires(product.etablissementId);
+    final horairesResult =
+        await horaireController.fetchHoraires(product.etablissementId);
 
     // Check if fetchHoraires failed (returned null) or list is empty
     if (horairesResult == null || horairesResult.isEmpty) {
@@ -55,7 +57,7 @@ class TimeSlotModal {
     // Check if there are any valid (open) horaires
     // The list might have 7 items but all closed - that's different from "not defined"
     final hasValidHoraires = horaireController.horaires.any((h) => h.isValid);
-    
+
     if (!hasValidHoraires) {
       Get.snackbar(
         "Aucun créneau disponible",
@@ -262,8 +264,9 @@ class TimeSlotModal {
             color: isPast
                 ? Colors.grey.shade200
                 : isSelected
-                    ? Colors.green.withOpacity(
-                        0.3) // CORRECTION : Opacité augmentée pour meilleure visibilité
+                    ? Colors.green.withValues(
+                        alpha:
+                            0.3) // CORRECTION : Opacité augmentée pour meilleure visibilité
                     : Colors.transparent,
             border: Border.all(
               color: isSelected
@@ -275,7 +278,7 @@ class TimeSlotModal {
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: Colors.green.withOpacity(0.2),
+                      color: Colors.green.withValues(alpha: 0.2),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     )

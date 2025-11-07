@@ -505,9 +505,6 @@ class _DeliveryMapViewState extends State<DeliveryMapView> {
     _fitMapToBounds();
   }
 
-  // ... rest of your UI methods (_buildInfoCard, _buildZoomControls, etc.)
-  // Keep all your existing UI methods exactly as they were
-
   Widget _buildInfoCard(BuildContext context) {
     final deviceType = TDeviceUtils.getDeviceType(context);
     final isMobile = deviceType == DeviceType.mobile;
@@ -522,7 +519,7 @@ class _DeliveryMapViewState extends State<DeliveryMapView> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: 0.15),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -594,7 +591,7 @@ class _DeliveryMapViewState extends State<DeliveryMapView> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: 0.15),
             blurRadius: 12,
             offset: const Offset(0, 2),
           ),
@@ -777,7 +774,7 @@ class _DeliveryMapViewState extends State<DeliveryMapView> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
+                    color: Colors.black.withValues(alpha: 0.15),
                     blurRadius: 12,
                     offset: const Offset(0, 2),
                   ),
@@ -796,7 +793,7 @@ class _DeliveryMapViewState extends State<DeliveryMapView> {
               (routePoints.isEmpty && travelTime.isEmpty))
             Positioned.fill(
               child: Container(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 child: Center(
                   child: Container(
                     padding: const EdgeInsets.all(20),
@@ -805,7 +802,7 @@ class _DeliveryMapViewState extends State<DeliveryMapView> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: 10,
                         ),
                       ],

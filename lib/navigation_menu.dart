@@ -28,7 +28,7 @@ class NavigationMenu extends StatelessWidget {
               color: darkMode ? darkModeBackground : playStoreBackground,
               border: Border(
                   top: BorderSide(
-                color: Colors.grey.shade300.withOpacity(0.5),
+                color: Colors.grey.shade300.withValues(alpha: 0.5),
                 width: 0.5,
               ))),
           child: NavigationBar(
@@ -39,7 +39,7 @@ class NavigationMenu extends StatelessWidget {
                 controller.selectedIndex.value = index,
             backgroundColor:
                 darkMode ? darkModeBackground : playStoreBackground,
-            indicatorColor: Colors.blue.withOpacity(0.5),
+            indicatorColor: Colors.blue.withValues(alpha: 0.5),
             surfaceTintColor: Colors.transparent,
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
             destinations: [

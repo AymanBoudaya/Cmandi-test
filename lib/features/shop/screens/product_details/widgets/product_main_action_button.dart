@@ -24,7 +24,7 @@ class ProductMainActionButton extends StatelessWidget {
       if (!Get.isRegistered<CartController>()) {
         return const SizedBox.shrink();
       }
-      
+
       // Pour les produits variables, vérifier la quantité de la variation sélectionnée
       // Pour les produits simples, vérifier la quantité totale
       int quantity;
@@ -32,14 +32,15 @@ class ProductMainActionButton extends StatelessWidget {
         final variationController = controller.variationController;
         final selectedSize = variationController.selectedSize.value;
         if (selectedSize.isNotEmpty) {
-          quantity = controller.obtenirQuantiteVariationDansPanier(product.id, selectedSize);
+          quantity = controller.obtenirQuantiteVariationDansPanier(
+              product.id, selectedSize);
         } else {
           quantity = 0; // Pas de taille sélectionnée = pas dans le panier
         }
       } else {
         quantity = controller.obtenirQuantiteProduitDansPanier(product.id);
       }
-      
+
       final hasItems = quantity > 0;
 
       return Material(
@@ -60,7 +61,7 @@ class ProductMainActionButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.green.shade300.withOpacity(0.5),
+                  color: Colors.green.shade300.withValues(alpha: 0.5),
                   blurRadius: hasItems ? 15 : 8,
                   offset: const Offset(0, 4),
                 ),
@@ -102,9 +103,7 @@ class ProductMainActionButton extends StatelessWidget {
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            hasItems
-                                ? 'Commander'
-                                : 'Ajouter au panier',
+                            hasItems ? 'Commander' : 'Ajouter au panier',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -148,4 +147,3 @@ class ProductMainActionButton extends StatelessWidget {
     });
   }
 }
-

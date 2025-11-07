@@ -36,9 +36,9 @@ class HeureButton extends StatelessWidget {
             duration: const Duration(milliseconds: 150),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              border: Border.all(color: effectiveColor.withOpacity(0.3)),
+              border: Border.all(color: effectiveColor.withValues(alpha: 0.3)),
               borderRadius: BorderRadius.circular(10),
-              color: effectiveColor.withOpacity(0.1),
+              color: effectiveColor.withValues(alpha: 0.1),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -117,7 +117,7 @@ class TProductCardHorizontal extends StatelessWidget {
                                   colors: [
                                     Colors.white
                                         .withAlpha((255 * 0.15).toInt()),
-                                    Colors.white.withOpacity(0.01),
+                                    Colors.white.withValues(alpha: 0.01),
                                   ],
                                 ),
                               ),
@@ -180,15 +180,13 @@ class TProductCardHorizontal extends StatelessWidget {
                                 vertical: 4, horizontal: 8),
                             decoration: BoxDecoration(
                               color: dark
-                                  ? Colors.black
-                                      .withAlpha((255 * 0.6).toInt())
-                                  : Colors.white
-                                      .withAlpha((255 * 0.9).toInt()),
+                                  ? Colors.black.withAlpha((255 * 0.6).toInt())
+                                  : Colors.white.withAlpha((255 * 0.9).toInt()),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: dark
                                     ? Colors.white24
-                                    : Colors.black.withOpacity(0.05),
+                                    : Colors.black.withValues(alpha: 0.05),
                               ),
                             ),
                             child: Text(
@@ -283,8 +281,7 @@ class TProductCardHorizontal extends StatelessWidget {
 
   Widget _buildProductImage() {
     // Si l'URL de l'image commence par http, c'est une image réseau
-    if (product.imageUrl.isNotEmpty &&
-        product.imageUrl.startsWith('http')) {
+    if (product.imageUrl.isNotEmpty && product.imageUrl.startsWith('http')) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(AppSizes.productImageRadius),
         child: Image.network(

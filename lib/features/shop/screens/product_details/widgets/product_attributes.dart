@@ -14,7 +14,8 @@ import '../../../models/produit_model.dart';
 class TProductAttributes extends StatelessWidget {
   final ProduitModel product;
   final String? tag;
-  final String? excludeVariationId; // Variation to exclude from disabled list (for edit mode)
+  final String?
+      excludeVariationId; // Variation to exclude from disabled list (for edit mode)
 
   const TProductAttributes({
     super.key,
@@ -32,7 +33,8 @@ class TProductAttributes extends StatelessWidget {
 
     return Obx(() {
       // Safety check: ensure controllers are initialized
-      if (!Get.isRegistered<VariationController>() || !Get.isRegistered<CartController>()) {
+      if (!Get.isRegistered<VariationController>() ||
+          !Get.isRegistered<CartController>()) {
         return const SizedBox.shrink();
       }
       final selectedSize = variationController.selectedSize.value;
@@ -60,10 +62,11 @@ class TProductAttributes extends StatelessWidget {
               // Vérifier si cette variation est dans le panier
               final bool isInCart = variationsInCartSet.contains(sp.size) &&
                   (excludeVariationId == null || sp.size != excludeVariationId);
-              
+
               // Obtenir la quantité de cette variation dans le panier
               final variationQuantity = isInCart
-                  ? cartController.obtenirQuantiteVariationDansPanier(product.id, sp.size)
+                  ? cartController.obtenirQuantiteVariationDansPanier(
+                      product.id, sp.size)
                   : 0;
 
               return ChoiceChip(
@@ -79,17 +82,18 @@ class TProductAttributes extends StatelessWidget {
                 selectedColor: AppColors.primary,
                 backgroundColor: isInCart && !isSelected
                     ? (dark
-                        ? Colors.green.shade900.withOpacity(0.3)
+                        ? Colors.green.shade900.withValues(alpha: 0.3)
                         : Colors.green.shade50)
                     : (dark ? AppColors.darkerGrey : AppColors.lightGrey),
                 disabledColor: dark
-                    ? Colors.grey.shade800.withOpacity(0.5)
+                    ? Colors.grey.shade800.withValues(alpha: 0.5)
                     : Colors.grey.shade300,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 avatar: isInCart && !isSelected
-                    ? Icon(Icons.check_circle, size: 16, color: Colors.green.shade600)
+                    ? Icon(Icons.check_circle,
+                        size: 16, color: Colors.green.shade600)
                     : null,
 
                 /// --- Permettre la sélection de plusieurs tailles ---
@@ -116,8 +120,9 @@ class TProductAttributes extends StatelessWidget {
           if (selectedSize.isNotEmpty)
             TRoundedContainer(
               padding: const EdgeInsets.all(AppSizes.md),
-              backgroundColor:
-                  dark ? AppColors.darkerGrey : AppColors.grey.withOpacity(0.2),
+              backgroundColor: dark
+                  ? AppColors.darkerGrey
+                  : AppColors.grey.withValues(alpha: 0.2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

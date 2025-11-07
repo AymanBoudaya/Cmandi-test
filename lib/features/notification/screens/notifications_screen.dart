@@ -80,7 +80,7 @@ class NotificationsScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: dark
                           ? AppColors.darkContainer
-                          : AppColors.primary.withOpacity(0.1),
+                          : AppColors.primary.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -88,7 +88,7 @@ class NotificationsScreen extends StatelessWidget {
                       size: 64,
                       color: dark
                           ? Colors.grey.shade600
-                          : AppColors.primary.withOpacity(0.5),
+                          : AppColors.primary.withValues(alpha: 0.5),
                     ),
                   ),
                   const SizedBox(height: AppSizes.spaceBtwSections),
@@ -103,7 +103,9 @@ class NotificationsScreen extends StatelessWidget {
                   Text(
                     'Vous n\'avez pas encore de notifications.\nElles apparaîtront ici lorsqu\'elles arriveront.',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: dark ? Colors.grey.shade400 : Colors.grey.shade600,
+                          color: dark
+                              ? Colors.grey.shade400
+                              : Colors.grey.shade600,
                         ),
                     textAlign: TextAlign.center,
                   ),
@@ -134,7 +136,8 @@ class NotificationsScreen extends StatelessWidget {
                         child: _NotificationItem(
                           notification: notification,
                           dark: dark,
-                          onTap: () => controller.handleNotificationTap(notification),
+                          onTap: () =>
+                              controller.handleNotificationTap(notification),
                         ),
                       );
                     },
@@ -227,22 +230,24 @@ class _NotificationItem extends StatelessWidget {
             color: dark
                 ? (isRead
                     ? AppColors.darkContainer
-                    : AppColors.primary.withOpacity(0.15))
-                : (isRead ? AppColors.white : AppColors.primary.withOpacity(0.08)),
+                    : AppColors.primary.withValues(alpha: 0.15))
+                : (isRead
+                    ? AppColors.white
+                    : AppColors.primary.withValues(alpha: 0.08)),
             borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
             border: Border.all(
               color: isRead
                   ? Colors.transparent
                   : (dark
-                      ? AppColors.primary.withOpacity(0.4)
-                      : AppColors.primary.withOpacity(0.3)),
+                      ? AppColors.primary.withValues(alpha: 0.4)
+                      : AppColors.primary.withValues(alpha: 0.3)),
               width: isRead ? 0 : 1.5,
             ),
             boxShadow: isRead
                 ? []
                 : [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: AppColors.primary.withValues(alpha: 0.1),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -262,133 +267,143 @@ class _NotificationItem extends StatelessWidget {
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-              // Icône de notification avec fond dégradé
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: isRead
-                        ? [
-                            dark
-                                ? AppColors.darkContainer
-                                : Colors.grey.shade100,
-                            dark
-                                ? AppColors.darkContainer
-                                : Colors.grey.shade50,
-                          ]
-                        : [
-                            AppColors.primary.withOpacity(0.2),
-                            AppColors.primary.withOpacity(0.1),
-                          ],
-                  ),
-                  borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
-                  boxShadow: [
-                    BoxShadow(
-                      color: iconColor.withOpacity(0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
+                // Icône de notification avec fond dégradé
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: isRead
+                          ? [
+                              dark
+                                  ? AppColors.darkContainer
+                                  : Colors.grey.shade100,
+                              dark
+                                  ? AppColors.darkContainer
+                                  : Colors.grey.shade50,
+                            ]
+                          : [
+                              AppColors.primary.withValues(alpha: 0.2),
+                              AppColors.primary.withValues(alpha: 0.1),
+                            ],
                     ),
-                  ],
+                    borderRadius:
+                        BorderRadius.circular(AppSizes.borderRadiusMd),
+                    boxShadow: [
+                      BoxShadow(
+                        color: iconColor.withValues(alpha: 0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    icon,
+                    color: iconColor,
+                    size: 28,
+                  ),
                 ),
-                child: Icon(
-                  icon,
-                  color: iconColor,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(width: AppSizes.md),
+                const SizedBox(width: AppSizes.md),
                 // Contenu de la notification
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                    // Titre avec badge "Nouveau" si non lue
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            notification.title,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight:
-                                      isRead ? FontWeight.w500 : FontWeight.bold,
-                                  fontSize: 16,
-                                  color: isRead
-                                      ? (dark
-                                          ? Colors.grey.shade300
-                                          : Colors.grey.shade700)
-                                      : (dark ? Colors.white : Colors.black87),
-                                  height: 1.3,
-                                ),
-                          ),
-                        ),
-                        if (!isRead)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                      // Titre avec badge "Nouveau" si non lue
+                      Row(
+                        children: [
+                          Expanded(
                             child: Text(
-                              'Nouveau',
+                              notification.title,
                               style: Theme.of(context)
                                   .textTheme
-                                  .labelSmall
+                                  .titleMedium
                                   ?.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: isRead
+                                        ? FontWeight.w500
+                                        : FontWeight.bold,
+                                    fontSize: 16,
+                                    color: isRead
+                                        ? (dark
+                                            ? Colors.grey.shade300
+                                            : Colors.grey.shade700)
+                                        : (dark
+                                            ? Colors.white
+                                            : Colors.black87),
+                                    height: 1.3,
                                   ),
                             ),
                           ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSizes.sm / 2),
-                    // Message
-                    Text(
-                      notification.message,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: dark
-                                ? Colors.grey.shade400
-                                : Colors.grey.shade600,
-                            fontSize: 14,
-                            height: 1.4,
-                          ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: AppSizes.sm),
-                    // Date avec icône
-                    Row(
-                      children: [
-                        Icon(
-                          Iconsax.clock,
-                          size: 12,
-                          color: dark
-                              ? Colors.grey.shade600
-                              : Colors.grey.shade500,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          _getTimeAgo(notification.createdAt),
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: dark
-                                    ? Colors.grey.shade600
-                                    : Colors.grey.shade500,
-                                fontSize: 12,
+                          if (!isRead)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
                               ),
-                        ),
-                      ],
-                    ),
-                  ],
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'Nouveau',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSizes.sm / 2),
+                      // Message
+                      Text(
+                        notification.message,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: dark
+                                  ? Colors.grey.shade400
+                                  : Colors.grey.shade600,
+                              fontSize: 14,
+                              height: 1.4,
+                            ),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: AppSizes.sm),
+                      // Date avec icône
+                      Row(
+                        children: [
+                          Icon(
+                            Iconsax.clock,
+                            size: 12,
+                            color: dark
+                                ? Colors.grey.shade600
+                                : Colors.grey.shade500,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            _getTimeAgo(notification.createdAt),
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                                  color: dark
+                                      ? Colors.grey.shade600
+                                      : Colors.grey.shade500,
+                                  fontSize: 12,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
             ),
           ),
         ),
@@ -396,4 +411,3 @@ class _NotificationItem extends StatelessWidget {
     );
   }
 }
-

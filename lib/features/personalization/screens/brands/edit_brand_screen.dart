@@ -405,7 +405,7 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
             constraints: BoxConstraints(maxWidth: constraints.maxWidth),
             child: DropdownButtonFormField<StatutEtablissement>(
               isExpanded: true,
-              value: _selectedStatut,
+              initialValue: _selectedStatut,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Statut',
@@ -544,7 +544,6 @@ class _EditEtablissementScreenState extends State<EditEtablissementScreen>
   }
 
   Widget _buildHorairesPreview() {
-    final dark = THelperFunctions.isDarkMode(context);
     final horairesOuverts = _horaireController.horaires
         .where((h) => h.estOuvert && h.isValid)
         .toList();

@@ -117,49 +117,6 @@ class CategoryManagementPage extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyTabState(bool isSubcategory, BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: controller.refreshCategories,
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.7,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  isSubcategory
-                      ? Icons.subdirectory_arrow_right
-                      : Icons.category,
-                  size: 60,
-                  color: Colors.grey[300],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  isSubcategory
-                      ? "Aucune sous-catégorie"
-                      : "Aucune catégorie principale",
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey[600]),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  isSubcategory
-                      ? "Les sous-catégories apparaîtront ici"
-                      : "Les catégories principales apparaîtront ici",
-                  style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildCategoryCard(CategoryModel category, BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
 
@@ -170,7 +127,7 @@ class CategoryManagementPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 2)),
         ],
@@ -281,7 +238,7 @@ class CategoryManagementPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withValues(alpha: 0.2),
               blurRadius: 20,
               offset: const Offset(0, 5)),
         ],

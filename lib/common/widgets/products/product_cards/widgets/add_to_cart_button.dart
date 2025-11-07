@@ -80,7 +80,7 @@ class ProductCardAddToCartButton extends StatelessWidget {
               width: 24, // Slightly larger
               height: 24,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius:
                     BorderRadius.circular(8), // Slightly larger radius
               ),
@@ -114,7 +114,7 @@ class ProductCardAddToCartButton extends StatelessWidget {
               width: 24,
               height: 24,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: const Center(
@@ -134,13 +134,13 @@ class ProductCardAddToCartButton extends StatelessWidget {
   void _handleAddToCart(CartController cartController) {
     // Vérifier si on peut ajouter ce produit
     if (!cartController.peutAjouterProduit(product)) return;
-    
+
     // Pour les produits variables, rediriger vers la page de détail pour choisir la taille
     if (!isSingleProduct) {
       Get.to(() => ProductDetailScreen(product: product));
       return;
     }
-    
+
     // Pour les produits simples, ajouter directement au panier
     if (isSingleProduct) {
       final cartItem = cartController.produitVersArticlePanier(product, 1);
@@ -151,13 +151,13 @@ class ProductCardAddToCartButton extends StatelessWidget {
   void _handleIncrement(CartController cartController) {
     // Vérifier si on peut ajouter ce produit
     if (!cartController.peutAjouterProduit(product)) return;
-    
+
     // Pour les produits variables, rediriger vers la page de détail pour choisir la taille
     if (!isSingleProduct) {
       Get.to(() => ProductDetailScreen(product: product));
       return;
     }
-    
+
     // Pour les produits simples, ajouter directement au panier
     if (isSingleProduct) {
       final cartItem = cartController.produitVersArticlePanier(product, 1);

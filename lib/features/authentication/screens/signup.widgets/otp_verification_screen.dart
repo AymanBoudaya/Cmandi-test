@@ -50,8 +50,9 @@ class OTPVerificationScreen extends StatelessWidget {
     final Color backgroundBottom =
         isDark ? const Color(0xFF1E1E1E) : const Color(0xFFE5E7EB);
     final Color cardColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
-    final Color shadowColor =
-        isDark ? Colors.black.withOpacity(0.6) : Colors.black.withOpacity(0.15);
+    final Color shadowColor = isDark
+        ? Colors.black.withValues(alpha: 0.6)
+        : Colors.black.withValues(alpha: 0.15);
 
     final Widget content = Column(
       crossAxisAlignment: CrossAxisAlignment.center,

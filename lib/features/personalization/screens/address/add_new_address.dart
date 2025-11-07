@@ -9,7 +9,6 @@ import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_ti
 import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../utils/validators/validation.dart';
 
@@ -24,8 +23,8 @@ class AddNewAddressScreen extends StatelessWidget {
     final userController = UserController.instance;
     final dark = THelperFunctions.isDarkMode(context);
     // Prefill user info once
-    controller.name.text = userController.user.value.fullName ?? '';
-    controller.phoneNumber.text = userController.user.value.phone ?? '';
+    controller.name.text = userController.user.value.fullName;
+    controller.phoneNumber.text = userController.user.value.phone;
 
     return Scaffold(
       appBar: const TAppBar(title: Text("Ajouter une adresse")),

@@ -356,7 +356,6 @@ class _AddEtablissementScreenState extends State<AddEtablissementScreen>
   }
 
   Widget _buildCoordinatesSection(double width) {
-    final isWide = width >= 900;
     final dark = THelperFunctions.isDarkMode(context);
     return CategoryFormCard(children: [
       const Text('Coordonnées GPS',

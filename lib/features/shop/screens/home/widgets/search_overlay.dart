@@ -71,13 +71,13 @@ class _SearchOverlayState extends State<SearchOverlay> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.black.withOpacity(0.4),
+      backgroundColor: Colors.black.withValues(alpha: 0.4),
       body: Stack(
         children: [
           /// --- Background Blur ---
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-            child: Container(color: Colors.black.withOpacity(0.25)),
+            child: Container(color: Colors.black.withValues(alpha: 0.25)),
           ),
 
           /// --- Main Content ---
@@ -107,7 +107,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
                             )
                           : const SizedBox.shrink()),
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.15),
+                      fillColor: Colors.white.withValues(alpha: 0.15),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide.none,
@@ -196,7 +196,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
       return Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -248,7 +248,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
         label,
         style: const TextStyle(color: Colors.white, fontSize: 12),
       ),
-      backgroundColor: Colors.blue.withOpacity(0.3),
+      backgroundColor: Colors.blue.withValues(alpha: 0.3),
       deleteIcon: const Icon(Icons.close, size: 16, color: Colors.white),
       onDeleted: onRemove,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -262,7 +262,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.3),
+          color: Colors.red.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(16),
         ),
         child: const Row(
@@ -411,7 +411,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
               padding: const EdgeInsets.all(12),
               margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -465,7 +465,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
           Icon(
             Icons.search_off,
             size: 80,
-            color: Colors.white.withOpacity(0.5),
+            color: Colors.white.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           const Text(
@@ -484,7 +484,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
                   Text(
                     'Essayez de modifier vos filtres de recherche',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                       fontSize: 14,
                     ),
                     textAlign: TextAlign.center,
@@ -495,7 +495,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
                     icon: const Icon(Icons.clear_all),
                     label: const Text('Réinitialiser les filtres'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.withOpacity(0.3),
+                      backgroundColor: Colors.blue.withValues(alpha: 0.3),
                       foregroundColor: Colors.white,
                     ),
                   ),
@@ -505,7 +505,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
               return Text(
                 'Aucun produit ne correspond à votre recherche',
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: 0.7),
                   fontSize: 14,
                 ),
                 textAlign: TextAlign.center,

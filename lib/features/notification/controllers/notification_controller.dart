@@ -36,9 +36,8 @@ class NotificationController extends GetxController {
           .select('*')
           .eq('user_id', currentUserId)
           .order('created_at', ascending: false);
-      notifications.value = (response as List)
-          .map((n) => NotificationModel.fromJson(n))
-          .toList();
+      notifications.value =
+          (response as List).map((n) => NotificationModel.fromJson(n)).toList();
     } catch (e) {
       debugPrint('Error loading notifications: $e');
     } finally {
@@ -70,7 +69,7 @@ class NotificationController extends GetxController {
           newNotif.title,
           newNotif.message,
           snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.green.withOpacity(0.85),
+          backgroundColor: Colors.green.withValues(alpha: 0.85),
           colorText: Colors.white,
         );
       },
@@ -78,8 +77,7 @@ class NotificationController extends GetxController {
     _channel!.subscribe();
   }
 
-  int get unreadCount =>
-      notifications.where((n) => n.read == false).length;
+  int get unreadCount => notifications.where((n) => n.read == false).length;
 
   Future<void> markAsRead(String id) async {
     try {
@@ -101,10 +99,10 @@ class NotificationController extends GetxController {
     // Vérifier si c'est une notification de commande
     final titleLower = n.title.toLowerCase();
     final messageLower = n.message.toLowerCase();
-    final isOrderNotification = titleLower.contains('commande') || 
-                                titleLower.contains('order') ||
-                                messageLower.contains('commande') ||
-                                messageLower.contains('order');
+    final isOrderNotification = titleLower.contains('commande') ||
+        titleLower.contains('order') ||
+        messageLower.contains('commande') ||
+        messageLower.contains('order');
 
     if (isOrderNotification) {
       // Récupérer le rôle de l'utilisateur
@@ -130,17 +128,14 @@ class NotificationController extends GetxController {
   /// Marquer toutes les notifications comme lues
   Future<void> markAllAsRead() async {
     try {
-      final unreadIds = notifications
-          .where((n) => !n.read)
-          .map((n) => n.id)
-          .toList();
+      final unreadIds =
+          notifications.where((n) => !n.read).map((n) => n.id).toList();
 
       if (unreadIds.isEmpty) return;
 
       await supabase
           .from('notifications')
-          .update({'read': true})
-          .inFilter('id', unreadIds);
+          .update({'read': true}).inFilter('id', unreadIds);
 
       // Mettre à jour localement
       for (var i = 0; i < notifications.length; i++) {

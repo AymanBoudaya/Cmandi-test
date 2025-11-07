@@ -24,7 +24,7 @@ class ProductImagePlaceholder extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -49,7 +49,7 @@ class ProductImagePlaceholder extends StatelessWidget {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: dark
-                        ? Colors.green.shade800.withOpacity(0.3)
+                        ? Colors.green.shade800.withValues(alpha: 0.3)
                         : Colors.green.shade100,
                     shape: BoxShape.circle,
                   ),
@@ -91,7 +91,7 @@ class ProductImagePlaceholder extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.9),
+                color: Colors.green.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Text(
@@ -120,8 +120,8 @@ class _ProductPlaceholderPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = dark
-          ? Colors.grey.shade800.withOpacity(0.3)
-          : Colors.grey.shade300.withOpacity(0.3)
+          ? Colors.grey.shade800.withValues(alpha: 0.3)
+          : Colors.grey.shade300.withValues(alpha: 0.3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 

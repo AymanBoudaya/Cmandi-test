@@ -31,7 +31,7 @@ class TPrimaryHeaderContainer extends StatelessWidget {
               top: -150,
               right: -250,
               child: TCircularContainer(
-                backgroundColor: Colors.white.withOpacity(0.07),
+                backgroundColor: Colors.white.withValues(alpha: 0.07),
                 blurSigma: 30,
               ),
             ),
@@ -39,7 +39,7 @@ class TPrimaryHeaderContainer extends StatelessWidget {
               top: 100,
               right: -300,
               child: TCircularContainer(
-                backgroundColor: Colors.white.withOpacity(0.07),
+                backgroundColor: Colors.white.withValues(alpha: 0.07),
                 blurSigma: 30,
               ),
             ),

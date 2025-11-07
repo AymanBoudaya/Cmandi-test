@@ -20,7 +20,7 @@ class CartBottomSection extends StatelessWidget {
         color: Theme.of(context).scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 12,
             offset: const Offset(0, -4),
           ),
@@ -50,7 +50,9 @@ class CartBottomSection extends StatelessWidget {
             children: [
               Expanded(child: _TotalPrice(controller: controller)),
               const SizedBox(width: AppSizes.spaceBtwItems),
-              Expanded(flex: 2, child: _CheckoutButton(onPressed: onCheckoutPressed)),
+              Expanded(
+                  flex: 2,
+                  child: _CheckoutButton(onPressed: onCheckoutPressed)),
             ],
           );
         }),

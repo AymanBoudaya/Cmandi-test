@@ -185,7 +185,7 @@ class OrderTrackingScreen extends StatelessWidget {
                                         .map((e) => "${e.key}: ${e.value}")
                                         .join(", "),
                                     style: TextStyle(
-                                        color: textColor.withOpacity(0.7),
+                                        color: textColor.withValues(alpha: 0.7),
                                         fontSize: 12),
                                   ),
                               ],

@@ -58,8 +58,8 @@ class AddressController extends GetxController {
     super.onInit();
     // Prefill name & phone from UserController
     final user = UserController.instance.user.value;
-    name.text = user.fullName ?? '';
-    phoneNumber.text = user.phone ?? '';
+    name.text = user.fullName;
+    phoneNumber.text = user.phone;
     getAllUserAddresses(); // ⚡️ charge la sélection existante
   }
 

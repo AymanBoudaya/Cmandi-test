@@ -40,7 +40,7 @@ class ProductReviewsSection extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: dark
-                      ? Colors.green.shade900.withOpacity(0.3)
+                      ? Colors.green.shade900.withValues(alpha: 0.3)
                       : Colors.green.shade50,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(

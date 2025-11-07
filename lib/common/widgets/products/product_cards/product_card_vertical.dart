@@ -94,7 +94,7 @@ class ProductCardVertical extends StatelessWidget {
                                     colors: [
                                       Colors.white
                                           .withAlpha((255 * 0.15).toInt()),
-                                      Colors.white.withOpacity(0.01),
+                                      Colors.white.withValues(alpha: 0.01),
                                     ],
                                   ),
                                 ),
@@ -350,7 +350,7 @@ class _CategoryBadge extends StatelessWidget {
               dark ? Colors.black.withAlpha(140) : Colors.white.withAlpha(230),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: dark ? Colors.white24 : Colors.black.withOpacity(0.05),
+            color: dark ? Colors.white24 : Colors.black.withValues(alpha: 0.05),
           ),
         ),
         child: Text(

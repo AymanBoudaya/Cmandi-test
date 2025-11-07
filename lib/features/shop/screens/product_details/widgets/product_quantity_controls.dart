@@ -33,7 +33,7 @@ class ProductQuantityControls extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         decoration: BoxDecoration(
           color: dark
-              ? Colors.green.shade900.withOpacity(0.2)
+              ? Colors.green.shade900.withValues(alpha: 0.2)
               : Colors.green.shade50,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
@@ -89,8 +89,8 @@ class ProductQuantityControls extends StatelessWidget {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color:
-                          Colors.green.shade200.withOpacity(dark ? 0.3 : 0.5),
+                      color: Colors.green.shade200
+                          .withValues(alpha: dark ? 0.3 : 0.5),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),

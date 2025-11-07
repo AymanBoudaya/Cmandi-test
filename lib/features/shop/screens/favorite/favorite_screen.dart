@@ -223,7 +223,7 @@ class FavoriteScreen extends StatelessWidget {
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         elevation: 6,
-        shadowColor: AppColors.primary.withOpacity(0.35),
+        shadowColor: AppColors.primary.withValues(alpha: 0.35),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
@@ -256,7 +256,7 @@ class FavoriteScreen extends StatelessWidget {
                     const BorderRadius.vertical(top: Radius.circular(20)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.12),
+                    color: Colors.black.withValues(alpha: 0.12),
                     blurRadius: 18,
                     offset: const Offset(0, -6),
                   ),
