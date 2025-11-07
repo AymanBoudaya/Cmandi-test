@@ -12,6 +12,8 @@ import '../categories/category_manager_screen.dart';
 import '../brands/mon_etablissement_screen.dart';
 import '../../../../utils/popups/loaders.dart';
 import '../../../shop/models/statut_etablissement_model.dart';
+import '../../../../data/repositories/authentication/authentication_repository.dart';
+import '../../../../navigation_menu.dart';
 import 'admin_dashboard_screen.dart';
 import 'gerant_dashboard_screen.dart';
 
@@ -178,20 +180,80 @@ class DashboardSideMenu extends StatelessWidget {
                     dark: dark,
                   ),
 
+                // Interface Client (pour Admin et Gérant)
+                if (isAdmin || userController.user.value.role == 'Gérant')
+                  _buildMenuItem(
+                    context: context,
+                    icon: Iconsax.user,
+                    title: 'Interface Client',
+                    isSelected: false,
+                    onTap: () {
+                      Navigator.pop(context); // Fermer le drawer
+                      Get.offAll(() => const NavigationMenu());
+                    },
+                    dark: dark,
+                  ),
+
                 const Divider(height: 32),
 
-                // Retour au menu principal
-                _buildMenuItem(
-                  context: context,
-                  icon: Iconsax.arrow_left,
-                  title: 'Retour au menu',
-                  isSelected: false,
-                  onTap: () {
-                    Navigator.pop(context); // Fermer le drawer
-                    Get.back();
-                  },
-                  dark: dark,
-                ),
+                // Logout (pour Admin et Gérant)
+                if (isAdmin || userController.user.value.role == 'Gérant')
+                  _buildMenuItem(
+                    context: context,
+                    icon: Iconsax.logout,
+                    title: 'Déconnexion',
+                    isSelected: false,
+                    onTap: () async {
+                      Navigator.pop(context); // Fermer le drawer
+                      // Demander confirmation avant de déconnecter
+                      final confirm = await Get.dialog<bool>(
+                        AlertDialog(
+                          title: const Text('Déconnexion'),
+                          content: const Text(
+                              'Êtes-vous sûr de vouloir vous déconnecter ?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Get.back(result: false),
+                              child: const Text('Annuler'),
+                            ),
+                            TextButton(
+                              onPressed: () => Get.back(result: true),
+                              child: const Text(
+                                'Déconnexion',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (confirm == true) {
+                        try {
+                          await AuthenticationRepository.instance.logout();
+                        } catch (e) {
+                          TLoaders.errorSnackBar(
+                            title: 'Erreur',
+                            message: 'Erreur lors de la déconnexion: $e',
+                          );
+                        }
+                      }
+                    },
+                    dark: dark,
+                    isDanger: true,
+                  ),
+
+                // Retour au menu principal (pour les autres cas)
+                if (!isAdmin && userController.user.value.role != 'Gérant')
+                  _buildMenuItem(
+                    context: context,
+                    icon: Iconsax.arrow_left,
+                    title: 'Retour au menu',
+                    isSelected: false,
+                    onTap: () {
+                      Navigator.pop(context); // Fermer le drawer
+                      Get.back();
+                    },
+                    dark: dark,
+                  ),
               ],
             ),
           ),
@@ -207,7 +269,12 @@ class DashboardSideMenu extends StatelessWidget {
     required bool isSelected,
     required VoidCallback onTap,
     required bool dark,
+    bool isDanger = false,
   }) {
+    final color = isDanger
+        ? Colors.red
+        : (isSelected ? AppColors.primary : Colors.grey);
+
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -221,12 +288,16 @@ class DashboardSideMenu extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary.withValues(alpha: 0.1)
+              ? (isDanger
+                  ? Colors.red.withValues(alpha: 0.1)
+                  : AppColors.primary.withValues(alpha: 0.1))
               : Colors.transparent,
           borderRadius: BorderRadius.circular(AppSizes.cardRadiusSm),
           border: isSelected
               ? Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.3),
+                  color: isDanger
+                      ? Colors.red.withValues(alpha: 0.3)
+                      : AppColors.primary.withValues(alpha: 0.3),
                   width: 1,
                 )
               : null,
@@ -235,7 +306,7 @@ class DashboardSideMenu extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: isSelected ? AppColors.primary : Colors.grey,
+              color: color,
               size: 20,
             ),
             const SizedBox(width: AppSizes.sm),
@@ -243,7 +314,7 @@ class DashboardSideMenu extends StatelessWidget {
               child: Text(
                 title,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: isSelected ? AppColors.primary : Colors.grey,
+                      color: color,
                       fontWeight:
                           isSelected ? FontWeight.w600 : FontWeight.normal,
                     ),
@@ -252,7 +323,7 @@ class DashboardSideMenu extends StatelessWidget {
             if (isSelected)
               Icon(
                 Iconsax.arrow_right_3,
-                color: AppColors.primary,
+                color: color,
                 size: 16,
               ),
           ],

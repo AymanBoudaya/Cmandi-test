@@ -11,6 +11,7 @@ import '../../../features/authentication/screens/onboarding/onboarding.dart';
 import '../../../features/personalization/controllers/user_controller.dart';
 import '../../../features/personalization/models/user_model.dart';
 import '../../../features/personalization/screens/dashboard/admin_dashboard_screen.dart';
+import '../../../features/shop/screens/order/gerant_order_management_screen.dart';
 import '../../../navigation_menu.dart';
 import '../../../utils/popups/loaders.dart';
 import '../user/user_repository.dart';
@@ -258,6 +259,9 @@ class AuthenticationRepository extends GetxController {
       // Si l'utilisateur est admin, rediriger vers le dashboard admin
       if (userRole == 'Admin') {
         Get.offAll(() => const AdminDashboardScreen());
+      } else if (userRole == 'Gérant') {
+        // Si l'utilisateur est gérant, rediriger vers la page de gestion des commandes
+        Get.offAll(() => const GerantOrderManagementScreen());
       } else {
         // Sinon, rediriger vers le menu de navigation normal
         Get.offAll(() => const NavigationMenu());
