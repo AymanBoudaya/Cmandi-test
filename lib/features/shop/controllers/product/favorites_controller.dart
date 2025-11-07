@@ -1,14 +1,13 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../utils/local_storage/storage_utility.dart';
 import '../../../../utils/popups/loaders.dart';
 import '../../models/produit_model.dart';
-
-import 'package:flutter/widgets.dart';
-
+import '../../models/etablissement_model.dart';
 import '../../../../data/repositories/product/produit_repository.dart';
 
 
@@ -21,13 +20,12 @@ class FavoritesController extends GetxController {
   final RxBool isLoading = false.obs;
 
   final String _storageKey = 'favorites';
+  final _supabase = Supabase.instance.client;
 
   @override
   void onInit() {
     super.onInit();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      loadFavorites();
-    });
+    // Le chargement sera déclenché par l'écran si nécessaire
   }
 
   /// Load favorites IDs from local storage and fetch product details
@@ -55,13 +53,63 @@ class FavoritesController extends GetxController {
 
     try {
       final products = await ProduitRepository.instance.getProductsByIds(favoriteIds);
+      
+      // Charger l'établissement pour chaque produit si manquant avec gestion d'erreur
+      // (même logique que fetchFeaturedProducts dans ProduitController)
+      final productsWithEtab = <ProduitModel>[];
+      for (final produit in products) {
+        try {
+          ProduitModel finalProduct = produit;
+          if (produit.etablissement == null &&
+              produit.etablissementId.isNotEmpty) {
+            finalProduct = await _loadEtablissementForProduct(produit);
+          }
+          productsWithEtab.add(finalProduct);
+        } catch (e) {
+          debugPrint(
+              'Erreur lors du chargement de l\'établissement pour le produit ${produit.id}: $e');
+          // Ajouter le produit même si l'établissement n'a pas pu être chargé
+          productsWithEtab.add(produit);
+        }
+      }
+
       // Keep order consistent with favoriteIds
-      final Map<String, ProduitModel> mapById = { for (var p in products) p.id: p };
-      final ordered = favoriteIds.map((id) => mapById[id]).whereType<ProduitModel>().toList();
+      final Map<String, ProduitModel> mapById = { 
+        for (var p in productsWithEtab) p.id: p 
+      };
+      final ordered = favoriteIds
+          .map((id) => mapById[id])
+          .whereType<ProduitModel>()
+          .toList();
       favoriteProducts.assignAll(ordered);
     } catch (e) {
-      TLoaders.errorSnackBar(title: 'Erreur', message: 'Impossible de charger les produits favoris');
+      debugPrint('Erreur lors du chargement des produits favoris: $e');
+      TLoaders.errorSnackBar(
+          title: 'Erreur', message: 'Impossible de charger les produits favoris');
     }
+  }
+
+  /// Charge l'établissement pour un produit si manquant
+  /// (même logique que _loadEtablissementForProduct dans ProduitController)
+  Future<ProduitModel> _loadEtablissementForProduct(
+      ProduitModel produit) async {
+    if (produit.etablissement != null || produit.etablissementId.isEmpty) {
+      return produit;
+    }
+
+    try {
+      final etabResponse = await _supabase
+          .from('etablissements')
+          .select('*')
+          .eq('id', produit.etablissementId)
+          .single();
+
+      final etab = Etablissement.fromJson(etabResponse);
+      return produit.copyWith(etablissement: etab);
+    } catch (e) {
+      debugPrint('Erreur chargement établissement pour produit: $e');
+    }
+    return produit;
   }
 
   /// Persist favorite ids locally
@@ -89,8 +137,13 @@ class FavoritesController extends GetxController {
         favoriteIds.add(productId);
         TLoaders.customToast(message: 'Produit ajouté aux favoris');
         try {
-          final fetched = await ProduitRepository.instance.getProductById(productId);
+          var fetched = await ProduitRepository.instance.getProductById(productId);
           if (fetched != null) {
+            // S'assurer que l'établissement est chargé (même si getProductById le charge déjà)
+            if (fetched.etablissement == null &&
+                fetched.etablissementId.isNotEmpty) {
+              fetched = await _loadEtablissementForProduct(fetched);
+            }
             final insertIndex = favoriteIds.indexOf(productId);
             if (insertIndex >= 0 && insertIndex <= favoriteProducts.length) {
               favoriteProducts.insert(insertIndex, fetched);

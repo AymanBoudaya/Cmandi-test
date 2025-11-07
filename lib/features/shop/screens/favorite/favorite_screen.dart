@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:caferesto/common/widgets/appbar/appbar.dart';
 import 'package:caferesto/common/widgets/products/product_cards/product_card_vertical.dart';
-import 'package:caferesto/common/widgets/shimmer/vertical_product_shimmer.dart';
+import 'package:caferesto/common/widgets/shimmer/shimmer_effect.dart';
+import 'package:caferesto/common/widgets/layouts/grid_layout.dart';
 import 'package:caferesto/features/shop/controllers/product/favorites_controller.dart';
 import 'package:caferesto/features/shop/models/produit_model.dart';
 import 'package:caferesto/navigation_menu.dart';
@@ -22,13 +23,12 @@ class FavoriteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = FavoritesController.instance;
     final isDark = THelperFunctions.isDarkMode(context);
-    final isDesktop = TDeviceUtils.isDesktop(context);
-    final isTablet = TDeviceUtils.isTablet(context);
+    final screenWidth = MediaQuery.of(context).size.width;
 
+    // Charger les favoris une seule fois au montage
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!controller.isLoading.value &&
-          controller.favoriteProducts.isEmpty &&
-          controller.favoriteIds.isNotEmpty) {
+          controller.favoriteProducts.isEmpty) {
         controller.loadFavorites();
       }
     });
@@ -38,8 +38,8 @@ class FavoriteScreen extends StatelessWidget {
       appBar: _buildAppBar(context, isDark, controller),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: isDesktop ? 40 : AppSizes.defaultSpace,
-          vertical: isDesktop ? 20 : AppSizes.defaultSpace,
+          horizontal: TDeviceUtils.getHorizontalPadding(screenWidth),
+          vertical: AppSizes.defaultSpace,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,12 +49,7 @@ class FavoriteScreen extends StatelessWidget {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: controller.loadFavorites,
-                child: Obx(() => _buildContent(
-                      context,
-                      controller,
-                      isDesktop,
-                      isTablet,
-                    )),
+                child: Obx(() => _buildContent(context, controller, screenWidth)),
               ),
             ),
           ],
@@ -108,22 +103,20 @@ class FavoriteScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildContent(BuildContext context, FavoritesController controller,
-      bool isDesktop, bool isTablet) {
-    final crossAxisCount = isDesktop ? 4 : (isTablet ? 3 : 2);
-    final mainAxisExtent = isDesktop ? 320.0 : (isTablet ? 300.0 : 280.0);
+  Widget _buildContent(
+      BuildContext context, FavoritesController controller, double screenWidth) {
+    final crossAxisCount = TDeviceUtils.getCrossAxisCount(screenWidth);
+    final mainAxisExtent = TDeviceUtils.getMainAxisExtent(screenWidth);
 
     if (controller.isLoading.value) {
-      return GridView.builder(
+      return SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        child: GridLayout(
+          itemCount: 6,
+          itemBuilder: (_, __) => const _ProductCardShimmer(),
           crossAxisCount: crossAxisCount,
-          crossAxisSpacing: AppSizes.defaultSpace,
-          mainAxisSpacing: AppSizes.defaultSpace,
           mainAxisExtent: mainAxisExtent,
         ),
-        itemCount: 6,
-        itemBuilder: (_, __) => const TVerticalProductShimmer(),
       );
     }
 
@@ -139,23 +132,21 @@ class FavoriteScreen extends StatelessWidget {
     }
 
     final products = controller.favoriteProducts;
-    return GridView.builder(
+    return SingleChildScrollView(
       key: const PageStorageKey('favorites_grid'),
       physics: const BouncingScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      child: GridLayout(
+        itemCount: products.length,
+        itemBuilder: (_, index) {
+          final ProduitModel p = products[index];
+          return ProductCardVertical(
+            product: p,
+            onFavoriteTap: () => controller.toggleFavoriteProduct(p.id),
+          );
+        },
         crossAxisCount: crossAxisCount,
-        crossAxisSpacing: AppSizes.defaultSpace,
-        mainAxisSpacing: AppSizes.defaultSpace,
         mainAxisExtent: mainAxisExtent,
       ),
-      itemCount: products.length,
-      itemBuilder: (_, index) {
-        final ProduitModel p = products[index];
-        return ProductCardVertical(
-          product: p,
-          onFavoriteTap: () => controller.toggleFavoriteProduct(p.id),
-        );
-      },
     );
   }
 
@@ -355,6 +346,28 @@ class FavoriteScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+/// Shimmer pour une carte de produit
+class _ProductCardShimmer extends StatelessWidget {
+  const _ProductCardShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        /// Image
+        const TShimmerEffect(width: double.infinity, height: 180),
+        const SizedBox(height: AppSizes.spaceBtwItems),
+
+        /// Title
+        const TShimmerEffect(width: 160, height: 15),
+        const SizedBox(height: AppSizes.spaceBtwItems / 2),
+        const TShimmerEffect(width: 110, height: 15),
+      ],
     );
   }
 }

@@ -31,13 +31,13 @@ class OrderController extends GetxController {
     }
   }
 
-  final orderRepository = Get.put(OrderRepository());
-  final produitRepository = ProduitRepository.instance;
-  final cartController = CartController.instance;
-  final userController = UserController.instance;
+  OrderRepository get orderRepository => Get.find<OrderRepository>();
+  ProduitRepository get produitRepository => ProduitRepository.instance;
+  CartController get cartController => CartController.instance;
+  UserController get userController => UserController.instance;
   final _db = Supabase.instance.client;
-  final addressController = AddressController.instance;
-  final checkoutController = CheckoutController.instance;
+  AddressController get addressController => AddressController.instance;
+  CheckoutController get checkoutController => CheckoutController.instance;
 
   // Service pour calculer l'heure d'arrivée
   final _arrivalTimeCalculator = ArrivalTimeCalculatorService();
@@ -57,27 +57,55 @@ class OrderController extends GetxController {
 
   @override
   void onClose() {
-    if (_ordersChannel != null) _db.removeChannel(_ordersChannel!);
+    try {
+      if (_ordersChannel != null) {
+        _db.removeChannel(_ordersChannel!);
+        _ordersChannel = null;
+      }
+    } catch (e) {
+      debugPrint('Erreur lors de la fermeture du canal: $e');
+    }
     super.onClose();
   }
 
   /// Écoute les changements dans la table `orders` pour l'utilisateur connecté
   void ecouterCommandesUtilisateur() {
-    final userId = userController.user.value.id;
-    if (userId.isEmpty) return;
+    try {
+      final userId = userController.user.value.id;
+      if (userId.isEmpty) return;
 
-    isLoading.value = true;
+      isLoading.value = true;
 
-    /// Écouter les changements dans la table `orders`
-    _db
-        .from('orders')
-        .stream(primaryKey: ['id'])
-        .eq('user_id', userId)
-        .order('created_at', ascending: false)
-        .listen((data) {
-          orders.value = data.map((row) => OrderModel.fromJson(row)).toList();
-          isLoading.value = false;
-        });
+      /// Écouter les changements dans la table `orders`
+      _db
+          .from('orders')
+          .stream(primaryKey: ['id'])
+          .eq('user_id', userId)
+          .order('created_at', ascending: false)
+          .listen(
+            (data) {
+              if (isClosed)
+                return; // Vérifier si le contrôleur est toujours actif
+              try {
+                orders.value =
+                    data.map((row) => OrderModel.fromJson(row)).toList();
+                isLoading.value = false;
+              } catch (e) {
+                debugPrint('Erreur lors de la mise à jour des commandes: $e');
+                isLoading.value = false;
+              }
+            },
+            onError: (error) {
+              debugPrint('Erreur dans le stream des commandes: $error');
+              if (!isClosed) {
+                isLoading.value = false;
+              }
+            },
+          );
+    } catch (e) {
+      debugPrint('Erreur lors de l\'écoute des commandes: $e');
+      isLoading.value = false;
+    }
   }
 
   /// Récupère les commandes d'un gérant pour un établissement donné

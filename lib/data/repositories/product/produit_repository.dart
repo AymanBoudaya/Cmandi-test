@@ -644,8 +644,10 @@ class ProduitRepository extends GetxController {
       List<ProduitModel> allProducts = [];
 
       for (final chunk in chunks) {
-        final response =
-            await _db.from('produits').select().inFilter('id', chunk);
+        final response = await _db
+            .from('produits')
+            .select('*, etablissement:etablissement_id(*)')
+            .inFilter('id', chunk);
 
         final List<Map<String, dynamic>> productData =
             (response as List).cast<Map<String, dynamic>>();

@@ -31,7 +31,7 @@ class GeneralBinding extends Bindings {
 
     Get.lazyPut(() => SignupController());
     Get.lazyPut(() => OTPVerificationController());
-    Get.lazyPut(() => OrderController());
+    Get.lazyPut<OrderController>(() => OrderController(), fenix: true);
 
     Get.lazyPut<AddressController>(() => AddressController(), fenix: true);
     Get.lazyPut<OrderRepository>(() => OrderRepository(), fenix: true);

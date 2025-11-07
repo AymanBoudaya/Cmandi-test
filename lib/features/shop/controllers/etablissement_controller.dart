@@ -55,8 +55,11 @@ class EtablissementController extends GetxController {
 
   @override
   void onClose() {
-    print('EtablissementController fermé');
-    _unsubscribeFromRealtime();
+    try {
+      _unsubscribeFromRealtime();
+    } catch (e) {
+      print('Erreur lors de la fermeture d\'EtablissementController: $e');
+    }
     super.onClose();
   }
 
@@ -68,25 +71,30 @@ class EtablissementController extends GetxController {
       schema: 'public',
       table: 'etablissements',
       callback: (payload) {
-        final eventType = payload.eventType;
-        final newData = payload.newRecord;
-        final oldData = payload.oldRecord;
+        if (isClosed) return; // Vérifier si le contrôleur est toujours actif
+        try {
+          final eventType = payload.eventType;
+          final newData = payload.newRecord;
+          final oldData = payload.oldRecord;
 
-        if (eventType == PostgresChangeEvent.insert) {
-          final etab = Etablissement.fromJson(newData);
-          etablissements.add(etab);
-          etablissements.refresh();
-        } else if (eventType == PostgresChangeEvent.update) {
-          final etab = Etablissement.fromJson(newData);
-          final index = etablissements.indexWhere((e) => e.id == etab.id);
-          if (index != -1) {
-            etablissements[index] = etab;
+          if (eventType == PostgresChangeEvent.insert) {
+            final etab = Etablissement.fromJson(newData);
+            etablissements.add(etab);
+            etablissements.refresh();
+          } else if (eventType == PostgresChangeEvent.update) {
+            final etab = Etablissement.fromJson(newData);
+            final index = etablissements.indexWhere((e) => e.id == etab.id);
+            if (index != -1) {
+              etablissements[index] = etab;
+              etablissements.refresh();
+            }
+          } else if (eventType == PostgresChangeEvent.delete) {
+            final id = oldData['id'];
+            etablissements.removeWhere((e) => e.id == id);
             etablissements.refresh();
           }
-        } else if (eventType == PostgresChangeEvent.delete) {
-          final id = oldData['id'];
-          etablissements.removeWhere((e) => e.id == id);
-          etablissements.refresh();
+        } catch (e) {
+          print('Erreur dans le callback de realtime: $e');
         }
       },
     );
@@ -95,8 +103,13 @@ class EtablissementController extends GetxController {
   }
 
   void _unsubscribeFromRealtime() {
-    if (_channel != null) {
-      _supabase.removeChannel(_channel!);
+    try {
+      if (_channel != null) {
+        _supabase.removeChannel(_channel!);
+        _channel = null;
+      }
+    } catch (e) {
+      print('Erreur lors de la désinscription du realtime: $e');
       _channel = null;
     }
   }
