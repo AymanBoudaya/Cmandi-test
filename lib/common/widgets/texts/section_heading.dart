@@ -48,8 +48,13 @@ class TSectionHeading extends StatelessWidget {
             ),
             if (showActionButton)
               TextButton(
-                onPressed: onPressed,
-                child: Text(buttonTitle),
+                onPressed: onPressed ?? () {},
+                child: Text(
+                  buttonTitle,
+                  style: TextStyle(
+                    color: whiteTextColor ? Colors.white : null,
+                  ),
+                ),
               ),
           ],
         ),

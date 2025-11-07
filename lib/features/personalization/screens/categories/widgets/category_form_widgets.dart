@@ -260,7 +260,7 @@ class CategoryFeaturedSwitch extends StatelessWidget {
           ),
         ),
         value: value,
-        activeColor: Colors.blue.shade400,
+        activeThumbColor : Colors.blue.shade400,
         onChanged: onChanged,
       ),
     );

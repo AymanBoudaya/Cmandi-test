@@ -39,7 +39,8 @@ class LocationController extends GetxController {
         isLocationEnabled.value = false;
       }
     } catch (e) {
-      debugPrint('Erreur lors du chargement de la préférence de localisation: $e');
+      debugPrint(
+          'Erreur lors du chargement de la préférence de localisation: $e');
       isLocationEnabled.value = false;
     }
   }
@@ -58,7 +59,8 @@ class LocationController extends GetxController {
       }
       return true;
     } catch (e) {
-      debugPrint('Erreur lors de la vérification des services de localisation: $e');
+      debugPrint(
+          'Erreur lors de la vérification des services de localisation: $e');
       return false;
     }
   }
@@ -68,7 +70,8 @@ class LocationController extends GetxController {
     try {
       await _storage.write(_storageKey, enabled);
     } catch (e) {
-      debugPrint('Erreur lors de la sauvegarde de la préférence de localisation: $e');
+      debugPrint(
+          'Erreur lors de la sauvegarde de la préférence de localisation: $e');
     }
   }
 
@@ -101,12 +104,13 @@ class LocationController extends GetxController {
     try {
       // Vérifier si les services de localisation sont activés au niveau du système
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      
+
       if (!serviceEnabled) {
         // Demander à l'utilisateur d'activer les services de localisation
         TLoaders.warningSnackBar(
           title: 'Services de localisation désactivés',
-          message: 'Veuillez activer les services de localisation dans les paramètres de votre appareil.',
+          message:
+              'Veuillez activer les services de localisation dans les paramètres de votre appareil.',
         );
         isLocationEnabled.value = false;
         await _saveLocationPreference(false);
@@ -115,15 +119,16 @@ class LocationController extends GetxController {
 
       // Vérifier les permissions
       LocationPermission permission = await Geolocator.checkPermission();
-      
+
       if (permission == LocationPermission.denied) {
         // Demander la permission
         permission = await Geolocator.requestPermission();
-        
+
         if (permission == LocationPermission.denied) {
           TLoaders.warningSnackBar(
             title: 'Permission refusée',
-            message: 'La permission de localisation est nécessaire pour utiliser cette fonctionnalité.',
+            message:
+                'La permission de localisation est nécessaire pour utiliser cette fonctionnalité.',
           );
           isLocationEnabled.value = false;
           await _saveLocationPreference(false);
@@ -134,7 +139,8 @@ class LocationController extends GetxController {
       if (permission == LocationPermission.deniedForever) {
         TLoaders.warningSnackBar(
           title: 'Permission définitivement refusée',
-          message: 'Veuillez activer la permission de localisation dans les paramètres de l\'application.',
+          message:
+              'Veuillez activer la permission de localisation dans les paramètres de l\'application.',
         );
         isLocationEnabled.value = false;
         await _saveLocationPreference(false);
@@ -214,4 +220,3 @@ class LocationController extends GetxController {
     }
   }
 }
-
