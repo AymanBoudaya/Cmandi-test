@@ -33,25 +33,23 @@ class DashboardSideMenu extends StatelessWidget {
     final dark = THelperFunctions.isDarkMode(context);
     final userController = Get.find<UserController>();
 
-    return Container(
-      width: 280,
-      decoration: BoxDecoration(
-        color: dark ? AppColors.darkContainer : Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(2, 0),
-          ),
-        ],
-      ),
-      child: Column(
+    return Drawer(
+      backgroundColor: dark ? AppColors.eerieBlack : Colors.white,
+      elevation: 0,
+      child: Container(
+        width: 280,
+        decoration: BoxDecoration(
+          color: dark ? AppColors.eerieBlack : Colors.white,
+        ),
+        child: Column(
         children: [
           // En-tête du menu
           Container(
             padding: const EdgeInsets.all(AppSizes.md),
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
+              color: dark 
+                  ? AppColors.primary.withValues(alpha: 0.2)
+                  : AppColors.primary.withValues(alpha: 0.1),
               border: Border(
                 bottom: BorderSide(
                   color: dark ? Colors.grey.shade800 : Colors.grey.shade300,
@@ -258,6 +256,7 @@ class DashboardSideMenu extends StatelessWidget {
             ),
           ),
         ],
+        ),
       ),
     );
   }

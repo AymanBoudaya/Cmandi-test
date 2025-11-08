@@ -217,6 +217,7 @@ class _GerantOrderManagementScreenState
         currentRoute: 'orders',
         isAdmin: false,
       ),
+      drawerScrimColor: Colors.black87, // Rendre le scrim opaque
       body: Column(
         children: [
           // Search Bar

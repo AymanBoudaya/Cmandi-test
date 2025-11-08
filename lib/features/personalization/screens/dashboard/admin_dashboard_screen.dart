@@ -44,6 +44,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         currentRoute: 'dashboard',
         isAdmin: true,
       ),
+      drawerScrimColor: Colors.black87, // Rendre le scrim opaque
       body: _buildDashboardContent(controller, dark),
     );
   }
