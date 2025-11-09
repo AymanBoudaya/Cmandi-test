@@ -35,13 +35,16 @@ class AuthenticationRepository extends GetxController {
 
       try {
         if (event == AuthChangeEvent.signedIn && session != null) {
-          // Si inscription en cours => ne pas rediriger
+          final user = session.user;
+
+          // Si inscription en cours (OTP) => ne pas rediriger
           if (pending != null) return;
 
-          // Connexion classique
+          // Initialiser le stockage local et charger les données utilisateur
+          await TLocalStorage.init(user.id);
           await UserRepository.instance.fetchUserDetails();
-          await TLocalStorage.init(session.user.id);
           await UserController.instance.fetchUserRecord();
+
           // Rediriger selon le rôle de l'utilisateur
           _redirectBasedOnRole();
         } else if (event == AuthChangeEvent.signedOut) {
@@ -49,7 +52,11 @@ class AuthenticationRepository extends GetxController {
           Get.offAll(() => const LoginScreen());
         }
       } catch (e) {
-        throw Exception('Erreur dans auth state change handler: $e');
+        TLoaders.errorSnackBar(
+          title: 'Erreur authentification',
+          message: e.toString(),
+        );
+        print('Erreur dans auth state change handler: $e');
       }
     });
 
@@ -58,7 +65,15 @@ class AuthenticationRepository extends GetxController {
 
   /// --- Redirection après démarrage
   Future<void> screenRedirect() async {
-    final Map<String, dynamic> userData = SignupController.instance.userData;
+    // Récupérer userData de manière sécurisée
+    Map<String, dynamic> userData = {};
+    try {
+      userData = SignupController.instance.userData;
+    } catch (e) {
+      // Si SignupController n'est pas encore initialisé, utiliser un Map vide
+      userData = {};
+    }
+
     final user = authUser;
     final pending = deviceStorage.read('pending_user_data');
 
@@ -216,20 +231,6 @@ class AuthenticationRepository extends GetxController {
     }
   }
 
-  /// --- Connexion via Google
-  Future<void> signInWithGoogle() async {
-    try {
-      await _auth.signInWithOAuth(
-        OAuthProvider.google,
-        redirectTo: 'io.supabase.flutterquickstart://login-callback',
-      );
-    } on AuthException catch (e) {
-      throw Exception('AuthException signInWithGoogle: ${e.message}');
-    } catch (e) {
-      throw Exception('Erreur inconnue signInWithGoogle: $e');
-    }
-  }
-
   /// --- Déconnexion
   Future<void> logout() async {
     try {
@@ -246,7 +247,7 @@ class AuthenticationRepository extends GetxController {
     try {
       final userController = UserController.instance;
       final user = userController.user.value;
-      
+
       // Vérifier que l'utilisateur est bien chargé
       if (user.id.isEmpty) {
         print('Utilisateur non chargé, redirection vers NavigationMenu');

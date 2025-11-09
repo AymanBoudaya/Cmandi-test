@@ -74,31 +74,4 @@ class LoginController extends GetxController {
       TLoaders.errorSnackBar(title: 'Erreur !', message: e.toString());
     }
   }
-
-  Future<void> googleSignIn() async {
-    try {
-      TFullScreenLoader.openLoadingDialog(
-        "Connexion avec Google...",
-        TImages.docerAnimation,
-      );
-
-      // Vérifier connexion internet
-      final isConnected = await NetworkManager.instance.isConnected();
-      if (!isConnected) {
-        TFullScreenLoader.stopLoading();
-        return;
-      }
-
-      // Appeler le repo
-      await AuthenticationRepository.instance.signInWithGoogle();
-
-      TFullScreenLoader.stopLoading();
-      // ⚠️ Pas besoin de navigation manuelle ici :
-      // onAuthStateChange dans AuthenticationRepository gère déjà la redirection.
-    } catch (e) {
-      TFullScreenLoader.stopLoading();
-      TLoaders.errorSnackBar(
-          title: 'Erreur Google Sign-In', message: e.toString());
-    }
-  }
 }
